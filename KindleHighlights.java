@@ -18,7 +18,7 @@ public class KindleHighlights {
 
         currCount = getCount(currFile);
         currLength = getLength(currFile);
-        sentCount = getCount(sentFile);
+        sentCount = getCount(sentFile); 
         sendLength = getLength(sentFile);
 
         System.out.println(currCount + " records in most updated clippings file.");
@@ -27,7 +27,7 @@ public class KindleHighlights {
         KindleRecord[] currentRecords = makeKindleArray(currCount, currFile);
         KindleRecord[] sentRecords;
 
-        if ( currLength == sendLength ) {
+        if ( currLength == sendLength && currCount != sentCount) {
             sentRecords = makeKindleArray(currCount, sentFile);
         } else {
             sentRecords = new KindleRecord[currCount];
@@ -54,8 +54,8 @@ public class KindleHighlights {
         // System.out.println( randomRecord.dashed );
         // System.out.println( "------" );
 
-
-        writeToFile("Sent Clippings.txt", sentRecords);
+        writeToFile("Sent Clippings.txt", sentRecords, false);
+        writeToFile("Todays Clippings.txt", recordsToSend, true);
     }
 
     public static int getCount ( File file ) throws Exception {
@@ -96,10 +96,15 @@ public class KindleHighlights {
             while (inFile.hasNextLine()) {
                 array[i] = new KindleRecord();
                 array[i].title = inFile.nextLine();
+                array[i].title = array[i].title.replaceAll("[^\\x00-\\x7F]", "");
                 array[i].meta = inFile.nextLine();
+                array[i].meta = array[i].meta.replaceAll("[^\\x00-\\x7F]", "");
                 array[i].blank = inFile.nextLine();
+                array[i].blank = array[i].blank.replaceAll("[^\\x00-\\x7F]", "");
                 array[i].text = inFile.nextLine();
+                array[i].text = array[i].text.replaceAll("[^\\x00-\\x7F]", "");
                 array[i].dashed = inFile.nextLine();
+                array[i].dashed = array[i].dashed.replaceAll("[^\\x00-\\x7F]", "");
                 i++;
             }            
         }
@@ -109,7 +114,7 @@ public class KindleHighlights {
         return array;
     }
 
-    public static boolean writeToFile( String fileName, KindleRecord[] data ) throws Exception {
+    public static boolean writeToFile( String fileName, KindleRecord[] data, boolean includeBreaks ) throws Exception {
         PrintWriter outFile = new PrintWriter(fileName);
 
         for ( int i = 0; i < data.length; i++ ) {
@@ -118,6 +123,11 @@ public class KindleHighlights {
             outFile.println(data[i].blank);
             outFile.println(data[i].text);
             outFile.println(data[i].dashed);
+            if ( includeBreaks ) {
+                outFile.println("");
+                outFile.println("");
+                outFile.println("");
+            }
         }
 
         outFile.close();
@@ -130,9 +140,10 @@ public class KindleHighlights {
         KindleRecord newRecord = sent[randomNum];
         int loops = 0;
 
-        while ( !newRecord.meta.equals("") && loops < all.length ) {
+        while ( !newRecord.meta.equals("") && loops < 100000 ) {
             randomNum = (int)(Math.random() * all.length);
             newRecord = sent[randomNum];
+            loops++;
         }
 
         newRecord = all[randomNum];
