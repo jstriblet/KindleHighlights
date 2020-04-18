@@ -54,8 +54,8 @@ public class KindleHighlights {
         // System.out.println( randomRecord.dashed );
         // System.out.println( "------" );
 
-        writeToFile("Sent Clippings.txt", sentRecords, false);
-        writeToFile("Todays Clippings.txt", recordsToSend, true);
+        writeToFile("/Users/striblet/Documents/CS/KindleHighlights/Sent Clippings.txt", sentRecords, false);
+        writeToFile("/Users/striblet/Documents/CS/KindleHighlights/Todays Clippings.txt", recordsToSend, true);
     }
 
     public static int getCount ( File file ) throws Exception {
