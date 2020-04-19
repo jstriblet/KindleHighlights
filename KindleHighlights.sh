@@ -1,1 +1,3 @@
-java -cp /Users/striblet/Documents/CS/KindleHighlights KindleHighlights
+#!/bin/bash
+cd /Users/striblet/Documents/CS/KindleHighlights
+osascript SendEmail.scpt
