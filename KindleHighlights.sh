@@ -1,6 +1,9 @@
 #!/bin/bash
 cd /Users/striblet/Documents/CS/KindleHighlights
-osascript SendEmail.scpt
+java KindleHighlights
+echo "ran java"
 
+
+# osascript SendEmail.scpt
 # Create a LaunchAgent @ ~/Library/LaunchAgent to run this script automatically
-# Copy of the one I used in: com.KindleHighlights.plist
+# A copy of the one I used is located in: com.KindleHighlights.plist

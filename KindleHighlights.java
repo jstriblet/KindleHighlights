@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.Scanner;
 import java.io.PrintWriter;
 
-class KindleRecord {
+class HighlightRecord {
     String title;
     String meta;
     String blank;
@@ -12,8 +12,8 @@ class KindleRecord {
 
 public class KindleHighlights {
     public static void main( String[] args) throws Exception {
-        File currFile = new File("/Users/striblet/Documents/CS/KindleHighlights/My Clippings.txt");
-        File sentFile = new File("/Users/striblet/Documents/CS/KindleHighlights/Sent Clippings.txt");
+        File currFile = new File("My Clippings.txt");
+        File sentFile = new File("Sent Clippings.txt");
         int currCount, sentCount, currLength, sendLength;
 
         currCount = getCount(currFile);
@@ -24,15 +24,15 @@ public class KindleHighlights {
         System.out.println(currCount + " records in most updated clippings file.");
         System.out.println(sentCount + " records in sent clippings file.");
 
-        KindleRecord[] currentRecords = makeKindleArray(currCount, currFile);
-        KindleRecord[] sentRecords;
+        HighlightRecord[] currentRecords = makeKindleArray(currCount, currFile);
+        HighlightRecord[] sentRecords;
 
         if ( currLength == sendLength && currCount != sentCount) {
             sentRecords = makeKindleArray(currCount, sentFile);
         } else {
-            sentRecords = new KindleRecord[currCount];
+            sentRecords = new HighlightRecord[currCount];
             for (int i = 0; i < currCount; i++) {
-                sentRecords[i] = new KindleRecord();
+                sentRecords[i] = new HighlightRecord();
                 sentRecords[i].title = "";
                 sentRecords[i].meta = "";
                 sentRecords[i].blank = "";
@@ -41,10 +41,10 @@ public class KindleHighlights {
             }
         }
 
-        KindleRecord[] recordsToSend = new KindleRecord[3];
-        recordsToSend[0] = pickKindleRecord(currentRecords, sentRecords);
-        recordsToSend[1] = pickKindleRecord(currentRecords, sentRecords);
-        recordsToSend[2] = pickKindleRecord(currentRecords, sentRecords);
+        HighlightRecord[] recordsToSend = new HighlightRecord[3];
+        recordsToSend[0] = pickHighlightRecord(currentRecords, sentRecords);
+        recordsToSend[1] = pickHighlightRecord(currentRecords, sentRecords);
+        recordsToSend[2] = pickHighlightRecord(currentRecords, sentRecords);
 
         // System.out.println( "------" );
         // System.out.println( randomRecord.title );
@@ -88,13 +88,13 @@ public class KindleHighlights {
         return count;
     }
 
-    public static KindleRecord[] makeKindleArray(int count, File file) throws Exception {
-        KindleRecord[] array = new KindleRecord[count];
+    public static HighlightRecord[] makeKindleArray(int count, File file) throws Exception {
+        HighlightRecord[] array = new HighlightRecord[count];
         Scanner inFile = new Scanner(file);
         int i = 0;
         if (0 < count ) { 
             while (inFile.hasNextLine()) {
-                array[i] = new KindleRecord();
+                array[i] = new HighlightRecord();
                 array[i].title = inFile.nextLine();
                 array[i].title = array[i].title.replaceAll("[^\\x00-\\x7F]", "");
                 array[i].meta = inFile.nextLine();
@@ -114,7 +114,7 @@ public class KindleHighlights {
         return array;
     }
 
-    public static boolean writeToFile( String fileName, KindleRecord[] data, boolean includeBreaks ) throws Exception {
+    public static boolean writeToFile( String fileName, HighlightRecord[] data, boolean includeBreaks ) throws Exception {
         PrintWriter outFile = new PrintWriter(fileName);
 
         for ( int i = 0; i < data.length; i++ ) {
@@ -135,9 +135,9 @@ public class KindleHighlights {
         return true;
     }
 
-    public static KindleRecord pickKindleRecord( KindleRecord[] all, KindleRecord[] sent ) {
+    public static HighlightRecord pickHighlightRecord( HighlightRecord[] all, HighlightRecord[] sent ) {
         int randomNum = (int)(Math.random()*all.length);
-        KindleRecord newRecord = sent[randomNum];
+        HighlightRecord newRecord = sent[randomNum];
         int loops = 0;
 
         while ( !newRecord.meta.equals("") && loops < 100000 ) {
