@@ -133,7 +133,7 @@ public class KindleHighlights {
                 if ( 0 < matchList.size() ) {
                     array[i].author = matchList.get(matchList.size() - 1); // Get the last item in the array list.
                 } else {
-                    array[i].author = "[Author Omitted]";
+                    array[i].author = "";
                 }
 
                 line = inFile.nextLine();
@@ -201,15 +201,26 @@ public class KindleHighlights {
         PrintWriter outFile = new PrintWriter(fileOutName);
 
         for (int i = 0; i < highlights.length; i++) {
+
+            String title = highlights[i].title == "" ? "[Title Not Found]" : highlights[i].title;
+            String author = highlights[i].author == "" ? "[Author Not Found]" : highlights[i].author;
+            String text = highlights[i].text == "" ? "[Text Not Found]" : highlights[i].text;
+
+            if ( (title.equals( "A Guide to the Good Life  ") ) && ("[Author Not Found]" == author) ) {
+                author = "William B. Irvine";
+            }
+
             outFile.println( "<tr>" );
-            outFile.println( "<td class=\"wrapper\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;\" valign=\"top\">" );
+            outFile.println( "<td class=\"wrapper\" style=\"font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;\" valign=\"top\">" );
             outFile.println( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">" );
             outFile.println( "<tr>" );
-            outFile.println( "<td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">" );
-            outFile.println( "<strong>" + highlights[i].title + "</strong> by: " + highlights[i].author );
+            outFile.println( "<td style=\"font-size: 14px; vertical-align: top;\" valign=\"top\">" );
+            outFile.println( "<strong>" + title + "</strong>");
+            outFile.println( "<br>");
+            outFile.println( "<span style=\"color:#9f8e7d; font-size:85%; vertical-align: bottom;\">by: " + author + "</span>" );
             outFile.println( "<hr>" );
-            outFile.println( "<ul style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">" );
-            outFile.println( "<li style=\"list-style-position: inside; margin-left: 5px;\">" + highlights[i].text + "</li>" );
+            outFile.println( "<ul style=\"font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">" );
+            outFile.println( "<li style=\"list-style-position: inside; margin-left: 5px;\">" + text + "</li>" );
             outFile.println( "</ul>" );
             outFile.println( "</td>" );
             outFile.println( "</tr>" );
