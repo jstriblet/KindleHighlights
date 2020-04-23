@@ -1,52 +1,66 @@
 import java.io.File;
 import java.util.Scanner;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-class HighlightRecord {
+class Highlight {
     String title;
-    String meta;
-    String blank;
+    String author;
+    String pageNum;
+    String location;
+    String date;
     String text;
-    String dashed;
+    public String toString() {
+        return "title: " + title + " by: " + author;
+    }
 }
 
 public class KindleHighlights {
     public static void main( String[] args) throws Exception {
         File currFile = new File("My Clippings.txt");
         File sentFile = new File("Sent Clippings.txt");
-        int currCount, sentCount, currLength, sendLength;
+        int currHighlightCount, sentHighlightCount, currLineCount, sentLineCount;
+        int numToPick = 3;
 
-        currCount = getCount(currFile);
-        currLength = getLength(currFile);
-        sentCount = getCount(sentFile); 
-        sendLength = getLength(sentFile);
+        currHighlightCount = getHighlightCount(currFile); // get the number of highlights in "My Clippings.txt"
+        currLineCount = getLineCount(currFile); // get the number of lines in "My Clippings.txt"
 
-        System.out.println(currCount + " records in most updated clippings file.");
-        System.out.println(sentCount + " records in sent clippings file.");
+        sentHighlightCount = getHighlightCount(sentFile); // get the number of highlights in "Sent Clippings.txt"
+        sentLineCount = getLineCount(sentFile); // get the number of lines in "Sent Clippings.txt"
 
-        HighlightRecord[] currentRecords = makeKindleArray(currCount, currFile);
-        HighlightRecord[] sentRecords;
+        System.out.println(currHighlightCount + " records in most updated clippings file.");
+        System.out.println(sentHighlightCount + " records in sent clippings file.");
+        System.out.println(currLineCount + " lines updated clippings file.");
+        System.out.println(sentLineCount + " lines sent clippings file.");
 
-        if ( currLength == sendLength && currCount != sentCount) {
-            sentRecords = makeKindleArray(currCount, sentFile);
+        Highlight[] currentRecords = makeHighlights(currHighlightCount, currFile);
+        Highlight[] sentRecords;
+
+        if ( currLineCount == sentLineCount && currHighlightCount != sentHighlightCount) { // The current number of highlights in both files are equal && we have not gotten threw all the highlights yet
+            sentRecords = makeHighlights(currHighlightCount+1, sentFile); // I'm not quite sure why we have to add one here, but to get the counts right it had to be done.
         } else {
-            sentRecords = new HighlightRecord[currCount];
-            for (int i = 0; i < currCount; i++) {
-                sentRecords[i] = new HighlightRecord();
+            sentRecords = new Highlight[currHighlightCount+1]; // again, still not sure why the count is wrong.
+            for (int i = 0; i <= currHighlightCount; i++) {
+                sentRecords[i] = new Highlight();
                 sentRecords[i].title = "";
-                sentRecords[i].meta = "";
-                sentRecords[i].blank = "";
+                sentRecords[i].author = "";
+                sentRecords[i].pageNum = "";
+                sentRecords[i].location = "";
+                sentRecords[i].date = "";
                 sentRecords[i].text = "";
-                sentRecords[i].dashed = "";
             }
         }
 
-        HighlightRecord[] recordsToSend = new HighlightRecord[3];
-        recordsToSend[0] = pickHighlightRecord(currentRecords, sentRecords);
-        recordsToSend[1] = pickHighlightRecord(currentRecords, sentRecords);
-        recordsToSend[2] = pickHighlightRecord(currentRecords, sentRecords);
+        Highlight[] recordsToSend = new Highlight[numToPick];
+        for (int i = 0; i < recordsToSend.length; i++) {
+            recordsToSend[i] = pickHighlight(currentRecords, sentRecords);
+        }
 
         // System.out.println( "------" );
+        // System.out.println( randomRecord.title );
         // System.out.println( randomRecord.title );
         // System.out.println( randomRecord.meta );
         // System.out.println( randomRecord.blank );
@@ -54,26 +68,33 @@ public class KindleHighlights {
         // System.out.println( randomRecord.dashed );
         // System.out.println( "------" );
 
-        writeToFile("/Users/striblet/Documents/CS/KindleHighlights/Sent Clippings.txt", sentRecords, false);
-        writeToFile("/Users/striblet/Documents/CS/KindleHighlights/Todays Clippings.txt", recordsToSend, true);
+        writeToFile("Sent Clippings.txt", sentRecords);
+        writeToFile("Todays Clippings.txt", recordsToSend);
+        renderEmail(recordsToSend, "Todays Email Body.htm");
     }
 
-    public static int getCount ( File file ) throws Exception {
+    public static int getHighlightCount ( File file ) throws Exception {
         Scanner inFile = new Scanner(file);
         int count = 0;
         String text;
 
         while ( inFile.hasNextLine() ) {
             text = inFile.nextLine();
-            if (text.equals("=========="))
-                count++;
+            if (text.equals("==========")) {
+                if (inFile.hasNextLine()) {
+                    text = inFile.nextLine();
+                    if ( text.length() > 5 ) {
+                        count++;
+                    }
+                }                    
+            }
         }
         inFile.close();
 
         return count;
     }
 
-    public static int getLength ( File file ) throws Exception {
+    public static int getLineCount ( File file ) throws Exception {
         Scanner inFile = new Scanner(file);
         int count = 0;
         String text;
@@ -88,23 +109,50 @@ public class KindleHighlights {
         return count;
     }
 
-    public static HighlightRecord[] makeKindleArray(int count, File file) throws Exception {
-        HighlightRecord[] array = new HighlightRecord[count];
+    public static Highlight[] makeHighlights(int count, File file) throws Exception {
+        Highlight[] array = new Highlight[count];
         Scanner inFile = new Scanner(file);
         int i = 0;
+
         if (0 < count ) { 
-            while (inFile.hasNextLine()) {
-                array[i] = new HighlightRecord();
-                array[i].title = inFile.nextLine();
-                array[i].title = array[i].title.replaceAll("[^\\x00-\\x7F]", "");
-                array[i].meta = inFile.nextLine();
-                array[i].meta = array[i].meta.replaceAll("[^\\x00-\\x7F]", "");
-                array[i].blank = inFile.nextLine();
-                array[i].blank = array[i].blank.replaceAll("[^\\x00-\\x7F]", "");
+            while (inFile.hasNextLine() && i < count ) {
+                array[i] = new Highlight();
+                
+                String line = inFile.nextLine();
+                array[i].title = line.split("\\(")[0];
+
+                // Regex for splitting the first line into title and author
+                List<String> matchList = new ArrayList<String>();
+                Pattern regex = Pattern.compile("\\((.*?)\\)");
+                Matcher regexMatcher = regex.matcher(line);
+
+                while (regexMatcher.find()) { //Finds Matching Pattern in String
+                    matchList.add(regexMatcher.group(1)); //Fetching Group from String
+                }
+
+                if ( 0 < matchList.size() ) {
+                    array[i].author = matchList.get(matchList.size() - 1); // Get the last item in the array list.
+                } else {
+                    array[i].author = "[Author Omitted]";
+                }
+
+                line = inFile.nextLine();
+
+                array[i].pageNum = line.split("\\|").length > 0 ? line.split("\\|")[0] : "" ;
+                array[i].location = line.split("\\|").length > 1 ? line.split("\\|")[1] : "" ;
+                array[i].date = line.split("\\|").length > 2 ? line.split("\\|")[2] : "" ;
+                inFile.nextLine(); // Skip blank Line
                 array[i].text = inFile.nextLine();
+                inFile.nextLine(); // Skip dashed Line
+
+                // Clean up the highlight record
+                array[i].title = array[i].title.replaceAll("[^\\x00-\\x7F]", "");
+                array[i].author = array[i].author.replaceAll("[^\\x00-\\x7F]", "");
+                array[i].pageNum = array[i].pageNum.replaceAll("[^\\x00-\\x7F]", "");
+                array[i].location = array[i].location.replaceAll("[^\\x00-\\x7F]", "");
+                array[i].date = array[i].date.replaceAll("[^\\x00-\\x7F]", "");
                 array[i].text = array[i].text.replaceAll("[^\\x00-\\x7F]", "");
-                array[i].dashed = inFile.nextLine();
-                array[i].dashed = array[i].dashed.replaceAll("[^\\x00-\\x7F]", "");
+
                 i++;
             }            
         }
@@ -114,20 +162,16 @@ public class KindleHighlights {
         return array;
     }
 
-    public static boolean writeToFile( String fileName, HighlightRecord[] data, boolean includeBreaks ) throws Exception {
+    public static boolean writeToFile( String fileName, Highlight[] data ) throws Exception {
         PrintWriter outFile = new PrintWriter(fileName);
 
+
         for ( int i = 0; i < data.length; i++ ) {
-            outFile.println(data[i].title);
-            outFile.println(data[i].meta);
-            outFile.println(data[i].blank);
+            outFile.println(data[i].title + "" + data[i].author + "");
+            outFile.println(data[i].pageNum + "|" + data[i].location + "" + data[i].date );
+            outFile.println(""); // Line Break
             outFile.println(data[i].text);
-            outFile.println(data[i].dashed);
-            if ( includeBreaks ) {
-                outFile.println("");
-                outFile.println("");
-                outFile.println("");
-            }
+            outFile.println("==========");
         }
 
         outFile.close();
@@ -135,12 +179,12 @@ public class KindleHighlights {
         return true;
     }
 
-    public static HighlightRecord pickHighlightRecord( HighlightRecord[] all, HighlightRecord[] sent ) {
+    public static Highlight pickHighlight( Highlight[] all, Highlight[] sent ) {
         int randomNum = (int)(Math.random()*all.length);
-        HighlightRecord newRecord = sent[randomNum];
+        Highlight newRecord = sent[randomNum];
         int loops = 0;
 
-        while ( !newRecord.meta.equals("") && loops < 100000 ) {
+        while ( !newRecord.text.equals("") && loops < 100000 ) {
             randomNum = (int)(Math.random() * all.length);
             newRecord = sent[randomNum];
             loops++;
@@ -151,6 +195,32 @@ public class KindleHighlights {
         sent[randomNum] = newRecord;
 
         return newRecord;
+    }
+
+    public static void renderEmail( Highlight[] highlights, String fileOutName ) throws Exception {
+        PrintWriter outFile = new PrintWriter(fileOutName);
+
+        for (int i = 0; i < highlights.length; i++) {
+            outFile.println( "<tr>" );
+            outFile.println( "<td class=\"wrapper\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;\" valign=\"top\">" );
+            outFile.println( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">" );
+            outFile.println( "<tr>" );
+            outFile.println( "<td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">" );
+            outFile.println( "<strong>" + highlights[i].title + "</strong> by: " + highlights[i].author );
+            outFile.println( "<hr>" );
+            outFile.println( "<ul style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">" );
+            outFile.println( "<li style=\"list-style-position: inside; margin-left: 5px;\">" + highlights[i].text + "</li>" );
+            outFile.println( "</ul>" );
+            outFile.println( "</td>" );
+            outFile.println( "</tr>" );
+            outFile.println( "</table>" );
+            outFile.println( "</td>" );
+            outFile.println( "</tr>" );
+            outFile.println( "" );
+        }
+
+        outFile.close();
+        
     }
 
 }

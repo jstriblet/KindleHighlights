@@ -1,7 +1,10 @@
 #!/bin/bash
 cd /Users/striblet/Documents/CS/KindleHighlights
+
 java KindleHighlights
-echo "ran java"
+
+cat Todays\ Email\ Header.htm Todays\ Email\ Body.htm Todays\ Email\ Footer.htm  | /usr/sbin/sendmail -t
+
 
 
 # osascript SendEmail.scpt
