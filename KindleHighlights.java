@@ -184,14 +184,15 @@ public class KindleHighlights {
         Highlight newRecord = sent[randomNum];
         int loops = 0;
 
-        while ( !newRecord.text.equals("") && loops < 100000 ) {
+        // the new record is not already sent, and new record length > 3, and the we've been looking for < 1000000 loop itterations 
+        // this needs to be refactored
+        while ( !newRecord.text.equals("") && all[randomNum].text.split(" ").length > 3 && loops < 1000000 ) { 
             randomNum = (int)(Math.random() * all.length);
             newRecord = sent[randomNum];
             loops++;
         }
 
         newRecord = all[randomNum];
-
         sent[randomNum] = newRecord;
 
         return newRecord;
@@ -210,28 +211,27 @@ public class KindleHighlights {
                 author = "William B. Irvine";
             }
 
+            outFile.println("<table class=\"main\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #fff; border-radius: 3px; width: 100%;\" width=\"100%\">");
             outFile.println( "<tr>" );
-            outFile.println( "<td class=\"wrapper\" style=\"font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;\" valign=\"top\">" );
+            outFile.println( "<td class=\"wrapper\" style=\"font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;\" >" );
             outFile.println( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">" );
             outFile.println( "<tr>" );
-            outFile.println( "<td style=\"font-size: 14px; vertical-align: top;\" valign=\"top\">" );
-            outFile.println( "<strong>" + title + "</strong>");
+            outFile.println( "<td style=\"font-size: 14px; vertical-align: top;\">" );
+            outFile.println( "<span style=\"font-weight: bold; font-size: 18px;\">" + title + "</span>");
             outFile.println( "<br>");
-            outFile.println( "<span style=\"color:#9f8e7d; font-size:85%; vertical-align: bottom;\">by: " + author + "</span>" );
+            if ( !author.equals("[Text Not Found]") ) {
+                outFile.println( "<span style=\"color:#9f8e7d; font-size:85%; vertical-align: bottom;\">by: " + author + "</span>" );
+            }
             outFile.println( "<hr>" );
-            outFile.println( "<ul style=\"font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">" );
-            outFile.println( "<li style=\"list-style-position: inside; margin-left: 5px;\">" + text + "</li>" );
-            outFile.println( "</ul>" );
+            outFile.println( "<span style=\"margin-left: 0px;\">" + text + "</span>" );
             outFile.println( "</td>" );
             outFile.println( "</tr>" );
             outFile.println( "</table>" );
             outFile.println( "</td>" );
             outFile.println( "</tr>" );
-            outFile.println( "" );
+            outFile.println("</table>");
+            outFile.println("<div style=\"width:100%;\">&nbsp;</div>");
         }
-
         outFile.close();
-        
     }
-
 }
