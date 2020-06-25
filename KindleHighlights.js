@@ -1,22 +1,20 @@
 class Database {
 	constructor() {
-		this.db = new Map();
+		this.records = new Map();
 	}
 
 	insert(record) {
-		this.db.set(record, 'N');
+		this.records.set(record, 'N');
 	}
 
 	get size() {
-		return this.db.size;
+		return this.records.size;
 	}
 
 	clean(){
-		for (let h of this.db.keys()) {
+		for (let h of this.records.keys()) {
 			if (h.highlight === null)
-				console.log(h)
-				this.db.delete(h);
-
+				this.records.delete(h);
 		}
 	}
 
@@ -25,12 +23,12 @@ class Database {
 		do {
 			let index = Math.floor(Math.random() * from.size);
 			let cntr = 0;
-			for (let key of from.db.keys()) {
+			for (let key of from.records.keys()) {
 				if (cntr++ === index) {
 					record = key;
 				}
 			}
-		} while(check.db.has(record))
+		} while(check.records.has(record))
 
 		return record;
 	}
@@ -51,7 +49,10 @@ class HighlightRecord {
 		let arr = text.split('\r');
 		let highlightLen = arr[4] ? arr[4].split(' ').length : 0;
 
-		if (highlightLen < 5) return false;
+		if (highlightLen < 5) {
+			//console.log('this is ignored ' + arr[4]);
+			return false;
+		}
 
 		this.title = arr[1].split('(')[0]; 
 		this.author = arr[1].split('(')[1];
@@ -59,10 +60,6 @@ class HighlightRecord {
 		this.location = arr[2].split('|')[1];
 		this.date_time = arr[2].split('|')[2];
 		this.highlight = arr[4];
-
-		if (this.title.replace(')', '').replace('\n', '').trim() == 'A Guide to the Good Life') {
-			console.log(arr[4].length );
-		}
 
 	}
 
@@ -82,8 +79,9 @@ class HighlightRecord {
 
 const createDB = function(file, db) {
 	const fs = require('fs');
-	let data = fs.readFileSync(file, 'utf8')
-	function make(data) {
+	let data = fs.readFileSync(file, 'utf8');
+
+	(function make(data) {
 		let arr = data.split('==========');
 		for (let i = 0; i < arr.length; i++) {
 			let record = new HighlightRecord();
@@ -91,21 +89,54 @@ const createDB = function(file, db) {
 			record.trim();
 			db.insert(record);
 		}
-	}
-	make(data);	
+	})(data);
 }
 
-const db1 = new Database();
-const db2 = new Database();
+// ... write the reference / used highlights data structure to file possibly use the appendFile method.
+const createFile = function(file, db) {
+	const fs = require('fs');
+	fs.writeFileSync(file, db)
+}
 
-file1 = './My Clippings.txt';
-file2 = './Sent Clippings.txt';
 
-createDB(file1, db1);
-createDB(file2, db2);
+const getHighlights = function(inFile, usedFile) {
 
-db1.clean();
+	const db1 = new Database();
+	const db2 = new Database();
 
-//let rndmRcrd = Database.pickRandom(db1, db2);
+	createDB(inFile, db1);
+	createDB(usedFile, db2);
+	db1.clean();
+	db2.clean();
 
-//console.log(rndmRcrd);
+	let record;
+
+	record = Database.pickRandom(db1, db2);
+	db2.insert(record)
+	record = Database.pickRandom(db1, db2);
+	db2.insert(record)
+	record = Database.pickRandom(db1, db2);
+	db2.insert(record)
+
+
+	 console.log(db2)
+
+}
+
+let file1 = './My Clippings.txt';
+let file2 = './Sent Clippings.txt';
+
+getHighlights(file1, file2);
+
+
+
+
+
+
+
+
+
+
+
+
+
