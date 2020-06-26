@@ -1,11 +1,11 @@
 #!/bin/bash
 cd /Users/striblet/Documents/CS/KindleHighlights
 
-java KindleHighlights
+#java KindleHighlights
+
+/usr/local/bin/node KindleHighlights.js
 
 cat Todays\ Email\ Header.htm Todays\ Email\ Body.htm Todays\ Email\ Footer.htm  | /usr/sbin/sendmail -t
-
-
 
 # osascript SendEmail.scpt
 # Create a LaunchAgent @ ~/Library/LaunchAgent to run this script automatically
