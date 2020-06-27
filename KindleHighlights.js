@@ -1,80 +1,5 @@
-class Database {
-	constructor() {
-		this.records = new Map();
-	}
-
-	insert(record) {
-		this.records.set(record, 'N');
-	}
-
-	get size() {
-		return this.records.size;
-	}
-
-	clean(){
-		for (let h of this.records.keys()) {
-			if (h.text === null)
-				this.records.delete(h);
-		}
-	}
-
-	static pickRandom(from, check) {
-		let record;
-		let loop = 0;
-		do {
-			let index = Math.floor(Math.random() * from.size);
-			let cntr = 0;
-			for (let key of from.records.keys()) {
-				if (cntr++ === index) {
-					record = key;
-				}
-			}
-			loop++;
-		} while(check.records.has(record) && loop < from.size * 1000)
-
-		return record;
-	}
-	
-}
-
-class HighlightRecord {
-	constructor(text) {
-		this.title;
-		this.author;
-		this.page;
-		this.location;
-		this.text;
-		this.date_time;
-	}
-
-	init(text) {
-		let arr = text.split('\r');
-		let highlightLen = arr[3] ? arr[3].split(' ').length : 0;
-
-		if (highlightLen < 5) {
-			//console.log('this is ignored ' + arr[4]);
-			return false;
-		}
-
-		this.title = arr[0].split('(')[0]; 
-		this.author = arr[0].split('(')[1];
-		this.page = arr[1].split('|')[0];
-		this.location = arr[1].split('|')[1];
-		this.date_time = arr[1].split('|')[2];
-		this.text = arr[3];
-
-	}
-
-	trim() {
-		this.title = this.title ? this.title.replace(')', '').replace('\n', '').trim() : null;
-		this.author = this.author ? this.author.replace(')', '').replace('\n', '').trim() : null;
-		this.page = this.page ? this.page.replace(')', '').replace('\n', '').replace('- Your Highlight on page', '').trim() : null;
-		this.location = this.location ? this.location.replace(')', '').replace('\n', '').replace('location', '').trim() : null;
-		this.date_time = this.date_time ? this.date_time.replace(')', '').replace('\n', '').replace('Added on', '').trim() : null;
-		this.text = this.text ? this.text.replace(')', '').replace('\n', '').trim() : null;
-		this.author = this.title == 'A Guide to the Good Life' ? 'William Braxton Irvine' : this.author;
-	}
-}
+const Database = require('./Database.js');
+const HighlightRecord = require('./HighlightRecord.js')
 
 const createDB = function(file, db) {
 	const fs = require('fs');
@@ -128,10 +53,8 @@ const getHighlights = function(inFile, usedFile) {
 		arr.push(record)
 		//console.log(record.text + '\r\n')
 	}
-
 	return arr
 }
-
 
 const createEmail = function(file, arr) {
 	const fs = require('fs');
@@ -139,24 +62,24 @@ const createEmail = function(file, arr) {
 
 	for (let record of arr) {
 		fs.appendFileSync(file,
-`<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #fff; border-radius: 3px; width: 100%;" width="100%">
-<tr>
-<td class="wrapper" style="font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" >
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%">
-<tr>
-<td style="font-size: 14px; vertical-align: top;">
-<span style="font-weight: bold; font-size: 18px;">${record.title}</span>
-<br>
-<span style="color:#9f8e7d; font-size:85%; vertical-align: bottom;">by: ${record.author}</span>
-<hr>
-<span style="margin-left: 0px;">${record.text}</span>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>
-<div style="width:100%;">&nbsp;</div>`
+			`<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #fff; border-radius: 3px; width: 100%;" width="100%">
+			<tr>
+			<td class="wrapper" style="font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" >
+			<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%">
+			<tr>
+			<td style="font-size: 14px; vertical-align: top;">
+			<span style="font-weight: bold; font-size: 18px;">${record.title}</span>
+			<br>
+			<span style="color:#9f8e7d; font-size:85%; vertical-align: bottom;">by: ${record.author}</span>
+			<hr>
+			<span style="margin-left: 0px;">${record.text}</span>
+			</td>
+			</tr>
+			</table>
+			</td>
+			</tr>
+			</table>
+			<div style="width:100%;">&nbsp;</div>`
 		);
 	}
 }
@@ -167,6 +90,3 @@ let file3 = './Todays Email Body.htm';
 let todaysHilights = getHighlights(file1, file2);
 		createFile(file2, todaysHilights);
 		createEmail(file3, todaysHilights);
-
-// to-do: seperate out the classes into their own files;
-
