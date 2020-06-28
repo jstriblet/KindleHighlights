@@ -22,7 +22,7 @@ Launchd(8)
 
 ## Installation
 
-Clone the repository to a convenient location.
+Clone the repository to a convenient location. 
 
 ## Setup & Usage
 
