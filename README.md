@@ -6,7 +6,9 @@ The hope for this project is to leverage spaced repetition to combat the forgett
 
 Inspired by:
 [readwise.](https://readwise.io/)
+
 the [Forgetting curve](https://en.wikipedia.org/wiki/Forgetting_curve)
+
 [Spaced Repetition](https://en.wikipedia.org/wiki/Spaced_repetition)
 
 ##  Requirements
