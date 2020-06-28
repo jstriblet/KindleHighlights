@@ -14,8 +14,10 @@ the [Forgetting curve](https://en.wikipedia.org/wiki/Forgetting_curve)
 ##  Requirements
 
 Node.js v13.8.0+
+
 Launchd(8)
-[LaunchControl](https://www.soma-zone.com/LaunchControl/) totally optional but I found it simpler to set up launchd daemons 
+
+[LaunchControl](https://www.soma-zone.com/LaunchControl/) -- totally optional but I found it simpler to set up launchd daemons 
 
 ## Installation
 
