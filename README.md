@@ -30,12 +30,17 @@ Clone the repository to a convenient location.
 
 Plug your Kindle into your computer and locate your "My Clippings.txt" file.
 Overwrite the "My Clippings.txt" file that came with this repository with the one from your Kindle.
-
 Delete the contents of the "Sent Clippings.txt" file.
 
 ### Launchd
 
+An example of the what my launch agent file looks like should be located in the repository as "com.KindleHighlights.plist". It is probably a smart idea to learn how to write the xml directly for this launch daemon but if you decide to go the lazy route like I have, the [LaunchControl app](https://www.soma-zone.com/LaunchControl/) is pretty easy to figure out and will make ensure your "com.KindleHighlights.plist" is configured correctly. 
+
 ### sendmail (mail/mailx)
+
+Setting up send mail for your particular OS is out of the scope for this README, however here are some links to help you get started:
+
+Additionally, the "KindleHighlights.sh" file has an example of of how my sendmail command arguments are formatted. 
 
 ### KindleHighlights.sh
 
@@ -43,3 +48,7 @@ Delete the contents of the "Sent Clippings.txt" file.
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+## To-Do
+
+- Automate the importing of the "My Clippings.txt" file when plugging in the Kindle.

@@ -11,7 +11,7 @@ class Database {
 		return this.records.size;
 	}
 
-	clean(){
+	clean() {
 		for (let h of this.records.keys()) {
 			if (h.text === null)
 				this.records.delete(h);
@@ -30,7 +30,7 @@ class Database {
 				}
 			}
 			loop++;
-		} while(check.records.has(record) && loop < from.size * 1000)
+		} while (check.records.has(record) && loop < from.size * 1000)
 
 		return record;
 	}
