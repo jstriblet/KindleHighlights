@@ -28,6 +28,11 @@ Clone the repository to a convenient location.
 
 ### My Clippings.txt
 
+Plug your Kindle into your computer and locate your "My Clippings.txt" file.
+Overwrite the "My Clippings.txt" file that came with this repository with the one from your Kindle.
+
+Delete the contents of the "Sent Clippings.txt" file.
+
 ### Launchd
 
 ### sendmail (mail/mailx)
