@@ -34,5 +34,4 @@ class HighlightRecord {
 	}
 }
 
-
 module.exports = HighlightRecord;	

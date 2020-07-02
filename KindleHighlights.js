@@ -1,5 +1,5 @@
 const Database = require('./Database.js');
-const HighlightRecord = require('./HighlightRecord.js')
+const HighlightRecord = require('./HighlightRecord.js');
 
 const createDB = function(file, db) {
 	const fs = require('fs');
@@ -51,7 +51,6 @@ const getHighlights = function(inFile, usedFile) {
 		record = Database.pickRandom(db1, db2);
 		db2.insert(record)
 		arr.push(record)
-		//console.log(record.text + '\r\n')
 	}
 	return arr
 }
