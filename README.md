@@ -41,7 +41,9 @@ An example of the what my launch agent file looks like should be located in the 
 Setting up send mail for your particular OS is out of the scope for this README, however here are some links to help you get started:
 
 [mailx command examples](https://www.binarytides.com/linux-mailx-command/)
+
 [How to Send Email Using mailx/s-nail in Linux Through Internal SMTP](https://www.systutorials.com/sending-email-using-mailx-in-linux-through-internal-smtp/)
+
 [https://coderwall.com/p/ez1x2w/send-mail-like-a-boss](https://coderwall.com/p/ez1x2w/send-mail-like-a-boss)
 
 Additionally, the "KindleHighlights.sh" file has an example of of how my sendmail command arguments are formatted. 
