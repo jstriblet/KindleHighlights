@@ -34,7 +34,7 @@ Delete the contents of the "Sent Clippings.txt" file.
 
 ### Launchd
 
-An example of the what my launch agent file looks like should be located in the repository as "com.KindleHighlights.plist". It is probably a smart idea to learn how to write the xml directly for this launch daemon but if you decide to go the lazy route like I have, the [LaunchControl app](https://www.soma-zone.com/LaunchControl/) is pretty easy to figure out and will make ensure your "com.KindleHighlights.plist" is configured correctly. 
+An example of the what my launch agent file looks like should be located in the repository as "com.KindleHighlights.plist" and "com.ImportHighlights.plist". It is probably a smart idea to learn how to write the xml directly for this launch daemon but if you decide to go the lazy route like I have, the [LaunchControl app](https://www.soma-zone.com/LaunchControl/) is pretty easy to figure out and will make ensure your "com.KindleHighlights.plist" is configured correctly. 
 
 ### sendmail (mail/mailx)
 
@@ -57,4 +57,4 @@ Please make sure to update tests as appropriate.
 
 ## To-Do
 
-- Automate the importing of the "My Clippings.txt" file when plugging in the Kindle.
+- Automate the importing of the "My Clippings.txt" file when plugging the Kindle into the computer. (Currently Testing)
