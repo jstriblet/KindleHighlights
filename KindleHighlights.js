@@ -20,7 +20,6 @@ const createFile = function(file, arr) {
 	const fs = require('fs');
 
 	for (let record of arr) {
-		console.log(record.text)
 		fs.appendFileSync(file, record.title + '( ' + record.author + ' )\r');
 		fs.appendFileSync(file, record.page + ' | ' + record.location + ' | ' + record.date_time + '\r');
 		fs.appendFileSync(file, '\r\n');
@@ -49,14 +48,15 @@ const getHighlights = function(inFile, usedFile) {
 
 	for (let i = 0; i < 3; i++) {
 		record = Database.pickRandom(db1, db2);
-		db2.insert(record)
-		arr.push(record)
+		db2.insert(record);
+		arr.push(record);
 	}
-	return arr
+	return arr;
 }
 
 const createEmail = function(file, arr) {
 	const fs = require('fs');
+
 	fs.writeFileSync(file, '');
 
 	for (let record of arr) {
@@ -89,3 +89,5 @@ let file3 = './Todays Email Body.htm';
 let todaysHilights = getHighlights(file1, file2);
 		createFile(file2, todaysHilights);
 		createEmail(file3, todaysHilights);
+
+console.log('KindleHighlights.js ran without errors. Enjoy your Highlights!');
