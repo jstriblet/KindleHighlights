@@ -1,8 +1,8 @@
 const Database = require('./Database.js');
 const HighlightRecord = require('./HighlightRecord.js');
+const fs = require('fs');
 
 const createDB = function(file, db) {
-	const fs = require('fs');
 	let data = fs.readFileSync(file, 'utf8');
 
 	(function make(data) {
@@ -17,8 +17,6 @@ const createDB = function(file, db) {
 }
 
 const createFile = function(file, arr) {
-	const fs = require('fs');
-
 	for (let record of arr) {
 		fs.appendFileSync(file, record.title + '( ' + record.author + ' )\r');
 		fs.appendFileSync(file, record.page + ' | ' + record.location + ' | ' + record.date_time + '\r');
@@ -29,7 +27,6 @@ const createFile = function(file, arr) {
 }
 
 const resetUsedFile = function(file) {
-		const fs = require('fs');
 		fs.writeFileSync(file, '');
 }
 
@@ -55,7 +52,6 @@ const getHighlights = function(inFile, usedFile) {
 }
 
 const createEmail = function(file, arr) {
-	const fs = require('fs');
 
 	fs.writeFileSync(file, '');
 
